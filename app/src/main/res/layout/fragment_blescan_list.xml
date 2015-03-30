@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView style="@style/FragmentLabelStyle" android:text="@string/ble_label"/>
+
+    <Button style="@style/ButtonStyle" android:id="@+id/buttonScanStart" android:text="@string/button_scan_start"/>
+
+    <ListView style="@style/ListStyle" android:id="@id/android:list"/>
+
+    <TextView style="@style/FragmentLabelStyle" android:id="@id/android:empty" android:text="@string/no_rows" />
+</LinearLayout>
