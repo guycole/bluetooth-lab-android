@@ -1,11 +1,12 @@
 package net.braingang.bluetoothlab;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -13,18 +14,20 @@ import java.util.ArrayList;
  * Created by gsc on 3/29/15.
  */
 public class DeviceListAdapter extends BaseAdapter {
-    private ArrayList<BluetoothDevice> _deviceList;
-    private LayoutInflater _inflator;
+    public static final String LOG_TAG = DeviceListAdapter.class.getName();
 
-    public DeviceListAdapter() {
+    private final LayoutInflater _inflater;
+    private final ArrayList<BluetoothDevice> _deviceList;
+
+    public DeviceListAdapter(LayoutInflater inflater) {
         super();
+        _inflater = inflater;
         _deviceList = new ArrayList<BluetoothDevice>();
-        _inflator = MainActivity.this.getLayoutInflater();
     }
 
-    public void addDevice(BluetoothDevice device) {
+    public void addDevice(BluetoothDevice device, int rssi) {
         if (_deviceList.contains(device)) {
-
+            Log.i(LOG_TAG, "duplicate device:" + device.getName() + ":" + device.getAddress());
         } else {
             _deviceList.add(device);
         }
@@ -58,7 +61,34 @@ public class DeviceListAdapter extends BaseAdapter {
         ViewHolder viewHolder;
 
         if (view == null) {
-            view = _inflator.inflate()
+            view = _inflater.inflate(R.layout.row_device, null);
+
+            viewHolder = new ViewHolder();
+            viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
+            viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
+            viewHolder.signalStrength = (TextView) view.findViewById(R.id.signal_strength);
+            view.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) view.getTag();
         }
+
+        BluetoothDevice device = _deviceList.get(ii);
+        final String deviceName = device.getName();
+        if (deviceName != null && !deviceName.isEmpty()) {
+            viewHolder.deviceName.setText(deviceName);
+        } else {
+            viewHolder.deviceName.setText("Empty Name");
+        }
+
+        viewHolder.deviceAddress.setText(device.getAddress());
+        viewHolder.signalStrength.setText(Integer.toString(123));
+
+        return view;
+    }
+
+    static class ViewHolder {
+        TextView deviceName;
+        TextView deviceAddress;
+        TextView signalStrength;
     }
 }
